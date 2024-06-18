@@ -1,0 +1,167 @@
+
+
+body {
+ background-color: 43423F;
+ font-family: "Poppins", Helvetica, Arial, sans-serif;
+}
+h1 {
+ color: BC9979;
+ margin: 1em;
+ font-size: 50px;
+ text-align: center;
+}
+h2 {
+ color: BC9979;
+ text-align: center;
+ font-size: 35px;
+}
+h3 {
+ color: BC9979;
+}
+h4 {
+ color: 4B5A51;
+ text-align: center;
+}
+p {
+ color: D0CFCD;
+ font-weight: lighter;
+}
+a {
+ color: D0CFCD;
+}
+
+ul {
+ list-style-type: none;
+ margin: 0;
+ padding: 0;
+ overflow: hidden;
+ background-color: EEE8D8;
+}
+li {
+ float: right;
+}
+li a { 
+ display: block;
+ padding: 14px 16px;
+ color: 696969;
+ text-align: center;
+ text-decoration: none;
+}
+li a:hover {
+ color: black;
+}
+table, td, th {
+ text-align: center;
+ padding: 50px;
+ background-color: 222120;
+ margin-left: auto;
+ margin-right: auto;
+}
+footer {
+ text-align: center;
+ padding: 3px;
+ margin-top: 50px;
+ height: 100px;
+}
+td h3 a, footer a {
+ color: D0CFCD;
+}
+footer a {
+ color: 222120;
+ padding: 20px;
+ margin: 370px;
+ border-radius: 50px;
+ background-color: BC9979;
+ text-decoration: none;
+}
+ footer a:hover {
+ background-color: solid black;
+}
+footer p {
+ margin-top: 30px;
+ font-weight: normal;
+}
+.frontlogo {
+ float: left;
+ height: 100px;
+ margin-left: 200px;
+}
+
+.indcontact a {
+ color: 222120;
+ padding: 20px;
+ margin: 370px;
+ border-radius: 50px;
+ background-color: BC9979;
+ text-decoration: none;
+ font-size: 30px;
+ font-weight: normal;
+ position: absolute;
+ top: 0%;
+ left: -12%;
+ transform: translate(-50%, -50%);
+}
+.indcontact a:hover {
+ background-color: a9896c;
+}
+
+.boxabout {
+ border: 1px solid green;
+ border-color: 222120;
+ background-color: 222120;
+ width: 100%;
+ margin: auto;
+ font-size: 25px;
+ font-weight: lighter;
+ overflow: auto;
+}
+.boxindex {
+ border: 1px solid green;
+ border-color: 222120;
+ background-color: 222120;
+ width: 1024px;
+ margin: auto;
+ font-size: 25px;
+ font-weight: lighter;
+ overflow: auto;
+}
+
+.container {
+  position: relative;
+  text-align: center;
+  color: BC9979;
+  margin: 0;
+  font-size: 90px;
+  font-weight: bolder;
+}
+.centered {
+  position: absolute;
+  top: 20%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+}
+.subhead {
+  position: absolute;
+  top: 20%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+}
+
+.top {
+ width: 100%;
+ height: 20px;
+ background-color: 2F2E2E;
+}
+
+.frontpic {
+ float: left;
+ height: 400px;
+ margin-left: 200px;
+ margin-right: 0;
+}
+
+
+
+
+
+
