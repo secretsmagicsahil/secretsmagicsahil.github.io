@@ -1,103 +1,112 @@
-
-
-
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
-<meta charset="utf-8" />
-<meta name="Keywords" content="tutor, math">
-<meta name="Description" content="MATH IS COOL">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title> Tutor | The Math Guys </title>
-<link rel="stylesheet" type="text/css" href="main.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mnemonica Trainer</title>
+    <style>
+        /* Dark Theme CSS (Styling) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
+            text-align: center;
+            margin-top: 50px;
+        }
+        #container {
+            background-color: #1a1a1a; /* Deep black container */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3); /* Deep red shadow */
+            width: 300px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #8B0000; /* Deep red buttons */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #A52A2A; /* Lighter red on hover */
+        }
+        h1 {
+            color: #c01d00; /* Tomato red for the title */
+        }
+        h2 {
+            color: #8a1500; /* Tomato red for the title */
+        }
+        #cut-info {
+            color: #FFD700; /* Golden yellow for the answer */
+        }
+    </style>
 </head>
-
 <body>
-<img src="logo pic.png" class="frontlogo" alt="The Math Guys">
+    <div id="container">
+        <h1>SeCretS Magic</h1>
+        <h2> Mnemonica Trainer </h2>
+        <p id="card-info">Press "Train" to start training!</p>
+        <button id="train-btn">Train</button>
+        <button id="reveal-btn" disabled>Reveal Answer</button>
+        <p id="cut-info"></p>
+        <p id="attempt-counter"></p>
+    </div>
 
-<div class="top">
-</div>
-<ul>
-<li><a href="contact.html"> Contact Us </a> </li>
-<li><a href="#Rates_and_Services"> Rates and Services </a> </li>
-<li><a href="about.html"> About </a> </li>
-<li><a href="index.html"> Home </a> </li>
-</ul>
+    <script>
+        // Mnemonica order and deck
+        const deck = ['AC', '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', '10C', 'JC', 'QC', 'KC',
+                      'AH', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '10H', 'JH', 'QH', 'KH',
+                      'AS', '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', '10S', 'JS', 'QS', 'KS',
+                      'AD', '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', '10D', 'JD', 'QD', 'KD'];
 
+        const Mnemonica_order = ['4C', '2H', '7D', '3C', '4H', '6D', 'AS', '5H', '9S', '2S', 'QH', '3D', 'QC',
+                                 '8H', '6S', '5S', '9H', 'KC', '2D', 'JH', '3S', '8S', '6H', '10C', '5D', 'KD',
+                                 '2C', '3H', '8D', '5C', 'KS', 'JD', '8C', '10S', 'KH', 'JC', '7S', '10H', 'AD',
+                                 '4S', '7H', '4D', 'AC', '9C', 'JS', 'QD', '7C', 'QS', '10D', '6C', 'AH', '9D'];
 
-<div class="container">
-<img src="indexpic.jpg" alt="The Math Guys" style="width:100%;">
-<div class="centered"> The Math Guys </div>
-<div class="indcontact"><a href="contact.html"> Contact Us </a> </div>
+        // Counter to track attempts
+        let attemptCounter = 0;
+        let cut_card = "";
+        let cut_position = "";
 
-</div>
+        // Function to handle training
+        function train() {
+            attemptCounter++;
 
+            // Randomly select a card and position
+            const card = deck[Math.floor(Math.random() * deck.length)];
+            const position = Math.floor(Math.random() * 52) + 1;
 
-<h4>
-Quality Primary and High School Math Tutoring
-</h4>
+            // Find position of the card in Mnemonica order
+            const position_Mnemonica = Mnemonica_order.indexOf(card) + 1;
+            cut_position = Math.abs(position - position_Mnemonica);
 
-<h2>
-At a Glance
-</h2>
+            if (position > position_Mnemonica) {
+                cut_position = 52 - cut_position;
+            }
 
-<img src="us.jpg" alt="The Math Guys" class="frontpic">
-<div class="boxindex">
+            cut_card = Mnemonica_order[cut_position - 1];
 
-<p>
-The Math Guys was founded by two, frankly, Math and comedic geniuses - Adam Crafford and Sahil Samlal. Both Adam and Sahil excelled in their schooling Mathematics careers. Their battle lasted until the end of Matric, where they both received 90%+ distinctions for Mathematics, among many others. Finally, they put their differences aside and started using their powers for good
-<br> <br>
-In his Matric year, Sahil Samlal was awarded the top Mathematics students and Advanced Programme Mathematics student. He was awarded the "Dequaviousek" medal of bravery for saving a child from an erupting volcano. A true national hero.
-<br> <br>
-Adam was that child. 
-​</p>
-</div>
+            // Update the page content with the card info and disable "Reveal Answer" button
+            document.getElementById('card-info').textContent = `Card: ${card} | Position: ${position}`;
+            document.getElementById('cut-info').textContent = ''; // Clear answer text
+            document.getElementById('attempt-counter').textContent = `Attempts: ${attemptCounter}`;
+            document.getElementById('reveal-btn').disabled = false; // Enable reveal button
+        }
 
-<h2>
-Rates
-</h2>
+        // Function to reveal the answer
+        function reveal() {
+            document.getElementById('cut-info').textContent = `Cut at ${cut_card}, which is in position ${cut_position}`;
+            document.getElementById('reveal-btn').disabled = true; // Disable reveal button after answer is shown
+        }
 
-<div class="boxindex">
-<table style="width: 100%;">
-
-<tr> 
-<td> <h3> Online Tutoring </h3> </td>
-<td> <h3> In-Person Tutoring </h3> </td>
-</tr>
-<tr>
-<td>
-<p>
-The Math Guys offer primary and high school online sessions over Zoom. With these, you get the same authentic The Math Guys tutoring experience but just not face-to-face.
-</p>
-</td>
-<td>
-<p>
-The Math Guys offer primary and high school in person sessions. These sessions could be at the clients house, a neutral location or possibly somewhere else. The Math Guys are flexible with location.
-</p>
-</td>
-</tr>
-<tr>
-<td> <h3> R150/hour with a Math Guy </h3> </td>
-<td> <h3> R200/hour with a Math Guy </h3> </td>
-</table>
-
-
-</div> 
-
-
-
-<footer> 
- <a href="contact.html"> Contact Us </a>
- <p> © 2022 by The Math Guys </p>
-</footer>
-
-
+        // Attach event listeners to buttons
+        document.getElementById('train-btn').addEventListener('click', train);
+        document.getElementById('reveal-btn').addEventListener('click', reveal);
+    </script>
 </body>
-
 </html>
-
