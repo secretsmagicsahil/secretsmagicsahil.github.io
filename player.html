@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Join Heist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+  <div class="card" id="playerView">
+    <h1>🕵️ Join the Heist</h1>
+
+    <section id="joinSection">
+      <label for="playerName">Your name (or codename):</label>
+      <input id="playerName" type="text" placeholder="e.g. The Phantom">
+      <button class="btn" id="joinBtn">Join Game</button>
+    </section>
+
+    <section id="gameSection" class="hidden">
+      <p>Welcome, <strong><span id="displayName"></span></strong>!</p>
+      <p><strong>Current Phase:</strong> <span id="playerPhaseText">–</span></p>
+      <h2>Mission</h2>
+      <p id="playerMissionText" class="live-box">Waiting for mission...</p>
+    </section>
+  </div>
+
+  <!-- Firebase + app logic -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

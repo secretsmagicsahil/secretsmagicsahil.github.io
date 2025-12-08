@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heist Host</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+  <div class="card" id="hostControls">
+    <h1>🎩 Heist Master Control</h1>
+
+    <section>
+      <h2>Current Phase</h2>
+      <div class="button-row">
+        <button class="btn" data-phase="Phase 1">Phase 1 – Warmup</button>
+        <button class="btn" data-phase="Phase 2">Phase 2 – Chaos</button>
+        <button class="btn btn-danger" data-phase="Final Heist">Phase 3 – Final Heist</button>
+      </div>
+      <p><strong>Live Phase:</strong> <span id="hostPhaseText">–</span></p>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Mission / Instruction</h2>
+      <textarea id="missionInput" rows="3" placeholder="e.g. Bring me 2 blue items..."></textarea>
+      <div class="button-row">
+        <button class="btn" id="updateMissionBtn">Update Mission</button>
+        <button class="btn btn-secondary" id="clearMissionBtn">Clear Mission</button>
+      </div>
+      <p><strong>Live Mission:</strong></p>
+      <p id="hostMissionText" class="live-box">No mission set yet.</p>
+    </section>
+  </div>
+
+  <!-- Firebase + app logic -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
