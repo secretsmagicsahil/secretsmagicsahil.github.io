@@ -94,3 +94,31 @@ body, html {
     border: 1px solid #374151;
     min-height: 40px;
   }  
+
+
+
+  /* Mobile styles */
+@media (max-width: 600px) {
+    button {
+        font-size: 20px;       /* bigger text */
+        padding: 16px 24px;    /* bigger hitbox */
+        width: 100%;           /* full width buttons */
+        margin-bottom: 12px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+}
+
+
+@media (max-width: 600px) {
+    .button-wrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+}
+
+
+
+
