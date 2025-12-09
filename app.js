@@ -333,6 +333,11 @@ function initPlayerPage() {
   const playerPhaseText = document.getElementById("playerPhaseText");
   const playerMissionText = document.getElementById("playerMissionText");
 
+  // 🔹 NEW: get refs for the player whiteboard elements
+  const playerBoardDisplay = document.getElementById("playerBoardDisplay");
+  const playerBoardInput = document.getElementById("playerBoardInput");
+  const playerBoardSaveBtn = document.getElementById("playerBoardSaveBtn");
+
   if (!joinSection || !gameSection || !playerNameInput || !joinBtn) {
     console.warn("Player page: some elements missing");
   }
@@ -366,4 +371,33 @@ function initPlayerPage() {
     if (!playerPhaseText) return;
     playerPhaseText.textContent = value || "–";
   });
+
+  // 🔹 NEW: subscribe to the shared player board message
+  subscribeToGameValue("playerBoardMessage", (value) => {
+    if (!playerBoardDisplay) return;
+
+    const text = value && value.length ? value : "(no message yet)";
+    playerBoardDisplay.textContent = text;
+
+    // Optional: keep the input in sync too,
+    // but only if the user isn't currently typing.
+    if (playerBoardInput && document.activeElement !== playerBoardInput) {
+      playerBoardInput.value = value || "";
+    }
+  });
+
+  // 🔹 NEW: allow players to save/update the shared message
+  if (playerBoardSaveBtn && playerBoardInput) {
+    playerBoardSaveBtn.addEventListener("click", () => {
+      const newText = playerBoardInput.value.trim();
+
+      if (!newText) {
+        alert("Type something before saving!");
+        return;
+      }
+
+      // This writes to: /game/playerBoardMessage in Realtime DB
+      setGameValue("playerBoardMessage", newText);
+    });
+  }
 }
