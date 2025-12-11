@@ -17,22 +17,9 @@ let db;
 // Host password – change this to whatever you want
 const MASTER_PASSWORD = "jingle2025";
 
-// Public teams & secret roles
-const PUBLIC_TEAMS = [
-  "Team Holly",
-  "Team Snow",
-  "Team Bells",
-  "Team Carol",
-  "Team Reindeer",
-];
+// Public teams – simple colours for now
+const PUBLIC_TEAMS = ["Red", "Blue", "Green", "Yellow"];
 
-const SECRET_ROLES = [
-  "Loyal to the Crown",
-  "Inside Elf",
-  "Double Agent",
-  "Thief in Disguise",
-  "Silent Guardian",
-];
 
 // =======================
 // 2. Firebase helpers
@@ -55,37 +42,53 @@ function subscribeToGameValue(key, callback) {
 }
 
 // Players DB helpers
-function registerOrUpdatePlayer(name) {
+// Assign players to teams in a round-robin way:
+// player 1 -> Red, 2 -> Blue, 3 -> Green, 4 -> Yellow, 5 -> Red, etc.
+async function registerOrUpdatePlayer(name) {
   const storedId = localStorage.getItem("heist_player_id");
 
-  // If this device already has an ID, just update the name
+  // If this device already has an ID, just update the name but keep their team
   if (storedId) {
+    const metaStr = localStorage.getItem("heist_player_meta") || "{}";
+    const meta = JSON.parse(metaStr);
+    const existingTeam = meta.team || "Unknown";
+
     const ref = db.ref("players/" + storedId);
     ref.update({ name });
-    return storedId;
+
+    // refresh local meta
+    localStorage.setItem(
+      "heist_player_meta",
+      JSON.stringify({ name, team: existingTeam })
+    );
+
+    return { id: storedId, team: existingTeam };
   }
 
-  // Fresh player – assign random team & secret role
-  const team = randomFrom(PUBLIC_TEAMS);
-  const secretRole = randomFrom(SECRET_ROLES);
+  // Fresh player – assign team using round-robin based on how many players exist
+  const playersRef = db.ref("players");
 
-  const ref = db.ref("players").push({
+  const snapshot = await playersRef.once("value");
+  const existingCount = snapshot.numChildren(); // 0, 1, 2, ...
+
+  const teamIndex = existingCount % PUBLIC_TEAMS.length;
+  const team = PUBLIC_TEAMS[teamIndex];
+
+  const ref = playersRef.push({
     name,
     team,
-    secretRole,
     points: 0,
     joinedAt: firebase.database.ServerValue.TIMESTAMP,
   });
 
   const newId = ref.key;
-  localStorage.setItem("heist_player_id", newId);
-  localStorage.setItem(
-    "heist_player_meta",
-    JSON.stringify({ name, team, secretRole })
-  );
 
-  return newId;
+  localStorage.setItem("heist_player_id", newId);
+  localStorage.setItem("heist_player_meta", JSON.stringify({ name, team }));
+
+  return { id: newId, team };
 }
+
 
 function randomFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -332,6 +335,7 @@ function initPlayerPage() {
   const displayName = document.getElementById("displayName");
   const playerPhaseText = document.getElementById("playerPhaseText");
   const playerMissionText = document.getElementById("playerMissionText");
+  const playerTeamText = document.getElementById("playerTeamText");
 
   // 🔹 NEW: get refs for the player whiteboard elements
   const playerBoardDisplay = document.getElementById("playerBoardDisplay");
@@ -342,23 +346,50 @@ function initPlayerPage() {
     console.warn("Player page: some elements missing");
   }
 
-  // Join button: assign name, send to Firebase, show game section
-  joinBtn.addEventListener("click", () => {
-    const name = playerNameInput.value.trim();
-    if (!name) {
-      alert("Enter a name or codename first!");
-      return;
-    }
+    // If they've already joined before, restore their name + team from localStorage
+    const storedMetaStr = localStorage.getItem("heist_player_meta");
+    if (storedMetaStr) {
+      try {
+        const meta = JSON.parse(storedMetaStr);
+        if (meta.name && displayName) {
+          displayName.textContent = meta.name;
+        }
+        if (meta.team && playerTeamText) {
+          playerTeamText.textContent = `You are in Team ${meta.team}`;
+        }
+      } catch (e) {
+        console.warn("Could not parse stored player meta:", e);
+      }
+    }  
 
-    // Register / update player in DB
-    registerOrUpdatePlayer(name);
-
-    if (displayName) {
-      displayName.textContent = name;
-    }
-    joinSection.classList.add("hidden");
-    gameSection.classList.remove("hidden");
-  });
+    // Join button: assign name, send to Firebase, show game section
+    joinBtn.addEventListener("click", async () => {
+      const name = playerNameInput.value.trim();
+      if (!name) {
+        alert("Enter a name or codename first!");
+        return;
+      }
+  
+      try {
+        // Register / update player in DB (round-robin team assignment)
+        const result = await registerOrUpdatePlayer(name);
+        const team = result.team;
+  
+        if (displayName) {
+          displayName.textContent = name;
+        }
+        if (playerTeamText && team) {
+          playerTeamText.textContent = `You are in Team ${team}`;
+        }
+  
+        joinSection.classList.add("hidden");
+        gameSection.classList.remove("hidden");
+      } catch (err) {
+        console.error("Error registering player:", err);
+        alert("Something went wrong while joining. Try again?");
+      }
+    });
+  
 
   // They can still see phase/mission even before joining
   subscribeToGameValue("mission", (value) => {
