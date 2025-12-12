@@ -328,6 +328,129 @@ label {
   }
 }
 
+/* ==== TEAM WHITEBOARD STYLES ==== */
+
+.team-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.team-board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.team-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.team-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 0.25rem 0.85rem;
+  font-size: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+
+.team-current {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.team-current-text {
+  min-height: 3rem;
+}
+
+.team-meta {
+  margin: 0;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.team-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.team-input-row input {
+  flex: 1;
+}
+
+.btn.small {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+  opacity: 0.8;
+}
+
+.link-button:hover {
+  opacity: 1;
+}
+
+.team-history {
+  margin-top: 0.25rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.team-history-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.25rem 0 0;
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 0.8rem;
+}
+
+.team-history-list li {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.team-history-list li:last-child {
+  border-bottom: none;
+}
+
+.team-history-message {
+  font-weight: 500;
+}
+
+.team-history-meta {
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Optional: host team boxes can reuse these */
+.team-box {
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  background: rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.5rem;
+}
+
 
 
 

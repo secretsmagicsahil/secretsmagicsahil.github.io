@@ -20,6 +20,9 @@ const MASTER_PASSWORD = "jingle2025";
 // Public teams – simple colours for now
 const PUBLIC_TEAMS = ["Red", "Blue", "Green", "Yellow"];
 
+// Current player info (used for team whiteboard)
+let playerTeam = null;
+let playerName = null;
 
 // =======================
 // 2. Firebase helpers
@@ -346,21 +349,38 @@ function initPlayerPage() {
     console.warn("Player page: some elements missing");
   }
 
-    // If they've already joined before, restore their name + team from localStorage
-    const storedMetaStr = localStorage.getItem("heist_player_meta");
-    if (storedMetaStr) {
-      try {
-        const meta = JSON.parse(storedMetaStr);
-        if (meta.name && displayName) {
-          displayName.textContent = meta.name;
-        }
-        if (meta.team && playerTeamText) {
-          playerTeamText.textContent = `You are in Team ${meta.team}`;
-        }
-      } catch (e) {
-        console.warn("Could not parse stored player meta:", e);
+  // If they've already joined before, restore their name + team from localStorage
+  const storedMetaStr = localStorage.getItem("heist_player_meta");
+  if (storedMetaStr) {
+    try {
+      const meta = JSON.parse(storedMetaStr);
+
+      // Set globals
+      playerName = meta.name || null;
+      playerTeam = meta.team || null;
+
+      if (meta.name && displayName) {
+        displayName.textContent = meta.name;
       }
-    }  
+      if (meta.team && playerTeamText) {
+        playerTeamText.textContent = `You are in Team ${meta.team}`;
+      }
+
+      // Update the badge on the Team Whiteboard card (if it exists)
+      const badge = document.getElementById("teamNameBadge");
+      if (badge && meta.team) {
+        badge.textContent = `Team ${meta.team}`;
+      }
+
+      // Start listening to this team's whiteboard immediately if we know the team
+      if (meta.team) {
+        initTeamWhiteboard(meta.team);
+      }
+    } catch (e) {
+      console.warn("Could not parse stored player meta:", e);
+    }
+  }
+  
 
     // Join button: assign name, send to Firebase, show game section
     joinBtn.addEventListener("click", async () => {
@@ -375,11 +395,26 @@ function initPlayerPage() {
         const result = await registerOrUpdatePlayer(name);
         const team = result.team;
   
+        // Set globals for team whiteboard
+        playerName = name;
+        playerTeam = team;
+  
         if (displayName) {
           displayName.textContent = name;
         }
         if (playerTeamText && team) {
           playerTeamText.textContent = `You are in Team ${team}`;
+        }
+  
+        // Update the badge on the Team Whiteboard card
+        const badge = document.getElementById("teamNameBadge");
+        if (badge && team) {
+          badge.textContent = `Team ${team}`;
+        }
+  
+        // Start listening to this team's whiteboard
+        if (team) {
+          initTeamWhiteboard(team);
         }
   
         joinSection.classList.add("hidden");
@@ -388,7 +423,7 @@ function initPlayerPage() {
         console.error("Error registering player:", err);
         alert("Something went wrong while joining. Try again?");
       }
-    });
+    });  
   
 
   // They can still see phase/mission even before joining
@@ -432,3 +467,137 @@ function initPlayerPage() {
     });
   }
 }
+
+// ========================
+// TEAM WHITEBOARD HELPERS
+// ========================
+
+function formatTimestamp(ts) {
+  const d = new Date(ts);
+  return (
+    d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) +
+    ", " +
+    d.toLocaleDateString([], { day: "2-digit", month: "short" })
+  );
+}
+
+function toggleTeamHistory() {
+  const panel = document.getElementById("teamHistoryPanel");
+  const label = document.getElementById("teamHistoryToggleLabel");
+
+  if (!panel || !label) return;
+
+  const isHidden = panel.classList.contains("hidden");
+
+  if (isHidden) {
+    panel.classList.remove("hidden");
+    label.innerText = "Hide history ▲";
+  } else {
+    panel.classList.add("hidden");
+    label.innerText = "Show history ▼";
+  }
+}
+
+function initTeamWhiteboard(team) {
+  if (!db || !team) return;
+
+  const teamRef = db.ref("teamWhiteboards/" + team);
+
+  // Listen for the current message
+  teamRef.child("current").on("value", (snapshot) => {
+    const data = snapshot.val();
+
+    const msgElem = document.getElementById("teamMessageText");
+    const metaElem = document.getElementById("teamMetaText");
+
+    if (!msgElem || !metaElem) return;
+
+    if (!data || !data.message) {
+      msgElem.innerText = "No team message yet";
+      metaElem.innerText = "Last updated: –";
+      return;
+    }
+
+    msgElem.innerText = data.message;
+
+    const sender = data.sender || "Someone on your team";
+    const ts = data.timestamp ? formatTimestamp(data.timestamp) : "Just now";
+
+    metaElem.innerText = `Last updated by ${sender} at ${ts}`;
+  });
+
+  // Listen for history (last 10 changes)
+  teamRef
+    .child("history")
+    .orderByChild("timestamp")
+    .limitToLast(10)
+    .on("value", (snapshot) => {
+      const listElem = document.getElementById("teamHistoryList");
+      if (!listElem) return;
+
+      listElem.innerHTML = "";
+
+      const history = snapshot.val() || {};
+      const entries = Object.values(history).sort(
+        (a, b) => a.timestamp - b.timestamp
+      );
+
+      if (entries.length === 0) {
+        listElem.innerHTML =
+          '<li><span class="team-history-meta">No history yet – be the first to update.</span></li>';
+        return;
+      }
+
+      entries.forEach((entry) => {
+        const li = document.createElement("li");
+
+        const msgSpan = document.createElement("div");
+        msgSpan.className = "team-history-message";
+        msgSpan.innerText = entry.message;
+
+        const metaSpan = document.createElement("div");
+        metaSpan.className = "team-history-meta";
+        const sender = entry.sender || "Unknown";
+        const ts = entry.timestamp
+          ? formatTimestamp(entry.timestamp)
+          : "Unknown time";
+        metaSpan.innerText = `${sender} • ${ts}`;
+
+        li.appendChild(msgSpan);
+        li.appendChild(metaSpan);
+
+        listElem.appendChild(li);
+      });
+    });
+}
+
+function updateTeamMessage() {
+  if (!db || !playerTeam) return;
+
+  const input = document.getElementById("teamMessageInput");
+  if (!input) return;
+
+  const message = input.value.trim();
+  if (!message) {
+    alert("Type something before updating your team's plan!");
+    return;
+  }
+
+  const now = Date.now();
+  const entry = {
+    message,
+    sender: playerName || "Unknown",
+    timestamp: now,
+  };
+
+  const teamRef = db.ref("teamWhiteboards/" + playerTeam);
+
+  // Set the current message
+  teamRef.child("current").set(entry);
+
+  // Push to history list
+  teamRef.child("history").push(entry);
+
+  input.value = "";
+}
+
