@@ -451,6 +451,30 @@ label {
   margin-bottom: 0.5rem;
 }
 
+/* === FIX: allow player card to scroll when content is tall === */
+
+.page {
+  align-items: flex-start !important;   /* stop vertical centering */
+  justify-content: center !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+#playerView {
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+/* add spacing between stacked inner cards */
+#gameSection > .card {
+  margin-top: 14px;
+}
+
+/* ensure link-button is visible */
+.link-button {
+  display: inline-block !important;
+  visibility: visible !important;
+}
 
 
 
