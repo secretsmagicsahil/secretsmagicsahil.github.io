@@ -35,6 +35,41 @@
                   placeholder="Type something for everyone to see..."></textarea>
         <button id="playerBoardSaveBtn">Save message</button>
       </div>
+
+      <div class="card team-board">
+        <div class="team-board-header">
+          <div>
+            <h2>Team Whiteboard</h2>
+            <p class="team-subtitle">Only your team can see this 👀</p>
+          </div>
+          <span id="teamNameBadge" class="team-badge">Team ?</span>
+        </div>
+      
+        <div class="team-current">
+          <p class="label">Current plan</p>
+          <p id="teamMessageText" class="live-box team-current-text">
+            Loading team message...
+          </p>
+          <p id="teamMetaText" class="team-meta">Last updated: –</p>
+        </div>
+      
+        <div class="team-input-row">
+          <input id="teamMessageInput" type="text" placeholder="Type your team's new plan…">
+          <button class="btn small" onclick="updateTeamMessage()">Update</button>
+        </div>
+      
+        <button class="link-button" type="button" onclick="toggleTeamHistory()">
+          <span id="teamHistoryToggleLabel">Show history ▼</span>
+        </button>
+      
+        <div id="teamHistoryPanel" class="team-history hidden">
+          <p class="label">Recent changes</p>
+          <ul id="teamHistoryList" class="team-history-list">
+            <!-- Filled by JS -->
+          </ul>
+        </div>
+      </div>
+      
     </section>
 
   </div>
