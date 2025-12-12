@@ -18,7 +18,7 @@ let db;
 const MASTER_PASSWORD = "jingle2025";
 
 // Public teams – simple colours for now
-const PUBLIC_TEAMS = ["Clubs", "Hearts", "Diamonds", "Spades"];
+const PUBLIC_TEAMS = ["Clubs ♣️", "Hearts ❤️", "Diamonds ♦️", "Spades ♠️"];
 
 // Current player info (used for team whiteboard)
 let playerTeam = null;
