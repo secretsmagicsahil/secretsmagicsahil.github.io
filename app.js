@@ -601,3 +601,6 @@ function updateTeamMessage() {
   input.value = "";
 }
 
+// Make functions available to inline HTML onclick handlers
+window.updateTeamMessage = updateTeamMessage;
+window.toggleTeamHistory = toggleTeamHistory;
