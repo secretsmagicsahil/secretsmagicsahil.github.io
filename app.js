@@ -363,7 +363,7 @@ function initPlayerPage() {
         displayName.textContent = meta.name;
       }
       if (meta.team && playerTeamText) {
-        playerTeamText.textContent = `You are in Team ${meta.team}`;
+        playerTeamText.textContent = `Your secret team is ${meta.team}`;
       }
 
       // Update the badge on the Team Whiteboard card (if it exists)
