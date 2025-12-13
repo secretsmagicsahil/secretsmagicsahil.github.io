@@ -514,7 +514,6 @@ function initTeamWhiteboard(team) {
     const data = snapshot.val();
 
     const msgElem = document.getElementById("teamMessageText");
-    const metaElem = document.getElementById("teamMetaText");
 
     if (!msgElem || !metaElem) return;
 
@@ -526,10 +525,6 @@ function initTeamWhiteboard(team) {
 
     msgElem.innerText = data.message;
 
-    const sender = data.sender || "Someone on your team";
-    const ts = data.timestamp ? formatTimestamp(data.timestamp) : "Just now";
-
-    metaElem.innerText = `Last updated by ${sender} at ${ts}`;
   });
 }
 
