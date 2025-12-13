@@ -112,7 +112,6 @@ window.addEventListener("load", () => {
 
   //Change names to avoid complications
   function teamKeyFromLabel(teamLabel) {
-    // Convert emoji team labels into safe Firebase keys
     if (!teamLabel) return "unknown";
   
     const map = {
@@ -122,8 +121,10 @@ window.addEventListener("load", () => {
       "Spades ♠️": "spades",
     };
   
-    return map[teamLabel] || String(teamLabel).toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  }
+    return map[teamLabel] || String(teamLabel)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-");
+  }  
   
 
   if (playerView) {
