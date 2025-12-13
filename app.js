@@ -515,11 +515,10 @@ function initTeamWhiteboard(team) {
 
     const msgElem = document.getElementById("teamMessageText");
 
-    if (!msgElem || !metaElem) return;
+    if (!msgElem) return;
 
     if (!data || !data.message) {
       msgElem.innerText = "No team message yet";
-      metaElem.innerText = "Last updated: –";
       return;
     }
 
