@@ -407,6 +407,9 @@ function initPlayerPage() {
         alert("Enter a name or codename first!");
         return;
       }
+
+      localStorage.setItem("heist_alive", "true");
+
   
       try {
         // Register / update player in DB (round-robin team assignment)
