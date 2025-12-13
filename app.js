@@ -97,19 +97,6 @@ function randomFrom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// =======================
-// 3. Entry point
-// =======================
-window.addEventListener("load", () => {
-  initFirebase();
-
-  const hostControls = document.getElementById("hostControls");
-  const playerView = document.getElementById("playerView");
-
-  if (hostControls) {
-    initHostPage();
-  }
-
   //Change names to avoid complications
   function teamKeyFromLabel(teamLabel) {
     if (!teamLabel) return "unknown";
@@ -124,7 +111,21 @@ window.addEventListener("load", () => {
     return map[teamLabel] || String(teamLabel)
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-");
-  }  
+  }
+
+// =======================
+// 3. Entry point
+// =======================
+window.addEventListener("load", () => {
+  initFirebase();
+
+  const hostControls = document.getElementById("hostControls");
+  const playerView = document.getElementById("playerView");
+
+  if (hostControls) {
+    initHostPage();
+  }
+
   
 
   if (playerView) {
