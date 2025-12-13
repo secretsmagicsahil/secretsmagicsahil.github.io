@@ -499,23 +499,6 @@ function formatTimestamp(ts) {
   );
 }
 
-function toggleTeamHistory() {
-  const panel = document.getElementById("teamHistoryPanel");
-  const label = document.getElementById("teamHistoryToggleLabel");
-
-  if (!panel || !label) return;
-
-  const isHidden = panel.classList.contains("hidden");
-
-  if (isHidden) {
-    panel.classList.remove("hidden");
-    label.innerText = "Hide history ▲";
-  } else {
-    panel.classList.add("hidden");
-    label.innerText = "Show history ▼";
-  }
-}
-
 function initTeamWhiteboard(team) {
   if (!db || !team) return;
 
@@ -543,50 +526,6 @@ function initTeamWhiteboard(team) {
 
     metaElem.innerText = `Last updated by ${sender} at ${ts}`;
   });
-
-  // Listen for history (last 10 changes)
-  teamRef
-    .child("history")
-    .orderByChild("timestamp")
-    .limitToLast(10)
-    .on("value", (snapshot) => {
-      const listElem = document.getElementById("teamHistoryList");
-      if (!listElem) return;
-
-      listElem.innerHTML = "";
-
-      const history = snapshot.val() || {};
-      const entries = Object.values(history).sort(
-        (a, b) => a.timestamp - b.timestamp
-      );
-
-      if (entries.length === 0) {
-        listElem.innerHTML =
-          '<li><span class="team-history-meta">No history yet – be the first to update.</span></li>';
-        return;
-      }
-
-      entries.forEach((entry) => {
-        const li = document.createElement("li");
-
-        const msgSpan = document.createElement("div");
-        msgSpan.className = "team-history-message";
-        msgSpan.innerText = entry.message;
-
-        const metaSpan = document.createElement("div");
-        metaSpan.className = "team-history-meta";
-        const sender = entry.sender || "Unknown";
-        const ts = entry.timestamp
-          ? formatTimestamp(entry.timestamp)
-          : "Unknown time";
-        metaSpan.innerText = `${sender} • ${ts}`;
-
-        li.appendChild(msgSpan);
-        li.appendChild(metaSpan);
-
-        listElem.appendChild(li);
-      });
-    });
 }
 
 function updateTeamMessage() {
@@ -612,9 +551,6 @@ function updateTeamMessage() {
 
   // Set the current message
   teamRef.child("current").set(entry);
-
-  // Push to history list
-  teamRef.child("history").push(entry);
 
   input.value = "";
 }
