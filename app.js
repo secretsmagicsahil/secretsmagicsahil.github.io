@@ -424,7 +424,7 @@ function initPlayerPage() {
           displayName.textContent = name;
         }
         if (playerTeamText && team) {
-          playerTeamText.textContent = `You are in Team ${team}`;
+          playerTeamText.textContent = `Your secret team is Team ${team}`;
         }
   
         // Update the badge on the Team Whiteboard card
