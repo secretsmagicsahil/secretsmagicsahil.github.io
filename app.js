@@ -110,6 +110,22 @@ window.addEventListener("load", () => {
     initHostPage();
   }
 
+  //Change names to avoid complications
+  function teamKeyFromLabel(teamLabel) {
+    // Convert emoji team labels into safe Firebase keys
+    if (!teamLabel) return "unknown";
+  
+    const map = {
+      "Clubs ♣️": "clubs",
+      "Hearts ❤️": "hearts",
+      "Diamonds ♦️": "diamonds",
+      "Spades ♠️": "spades",
+    };
+  
+    return map[teamLabel] || String(teamLabel).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  }
+  
+
   if (playerView) {
     initPlayerPage();
   }
@@ -374,7 +390,7 @@ function initPlayerPage() {
 
       // Start listening to this team's whiteboard immediately if we know the team
       if (meta.team) {
-        initTeamWhiteboard(meta.team);
+        initTeamWhiteboard(teamKeyFromLabel(meta.team));
       }
     } catch (e) {
       console.warn("Could not parse stored player meta:", e);
@@ -414,7 +430,7 @@ function initPlayerPage() {
   
         // Start listening to this team's whiteboard
         if (team) {
-          initTeamWhiteboard(team);
+          initTeamWhiteboard(teamKeyFromLabel(team));
         }
   
         joinSection.classList.add("hidden");
@@ -590,7 +606,7 @@ function updateTeamMessage() {
     timestamp: now,
   };
 
-  const teamRef = db.ref("teamWhiteboards/" + playerTeam);
+  const teamRef = db.ref("teamWhiteboards/" + teamKeyFromLabel(playerTeam));
 
   // Set the current message
   teamRef.child("current").set(entry);
