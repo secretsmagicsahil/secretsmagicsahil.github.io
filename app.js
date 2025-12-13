@@ -412,6 +412,9 @@ function initPlayerPage() {
         // Register / update player in DB (round-robin team assignment)
         const result = await registerOrUpdatePlayer(name);
         const team = result.team;
+
+        console.log("[JOIN] team label:", team);
+        console.log("[JOIN] team key:", teamKeyFromLabel(team));
   
         // Set globals for team whiteboard
         playerName = name;
@@ -500,12 +503,14 @@ function formatTimestamp(ts) {
 }
 
 function initTeamWhiteboard(team) {
+  console.log("[TEAM BOARD] initTeamWhiteboard called with:", team);
   if (!db || !team) return;
 
   const teamRef = db.ref("teamWhiteboards/" + team);
 
   // Listen for the current message
   teamRef.child("current").on("value", (snapshot) => {
+    console.log("[TEAM BOARD] current snapshot:", snapshot.val());
     const data = snapshot.val();
 
     const msgElem = document.getElementById("teamMessageText");
@@ -557,4 +562,3 @@ function updateTeamMessage() {
 
 // Make functions available to inline HTML onclick handlers
 window.updateTeamMessage = updateTeamMessage;
-window.toggleTeamHistory = toggleTeamHistory;
