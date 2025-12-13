@@ -437,9 +437,9 @@ function initPlayerPage() {
         joinSection.classList.add("hidden");
         gameSection.classList.remove("hidden");
       } catch (err) {
-        console.error("Error registering player:", err);
-        alert("Something went wrong while joining. Try again?");
-      }
+        console.error("JOIN ERROR (full):", err);
+        alert("Join failed: " + (err?.message || err));
+      }      
     });  
   
 
